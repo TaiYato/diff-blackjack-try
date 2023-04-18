@@ -6,20 +6,25 @@ class Blackjack
     static void Main(string[] args)
     {
         int money = 1000;
+        ConsoleColor defaultcolor = ConsoleColor.Green;
+        Console.ForegroundColor = defaultcolor;
         Console.WriteLine("Welcome to Blackjack! You have $" + money);
 
         //Betting
         while (money > 0)
-        {
+        {   
             Console.WriteLine();
             Console.Write("Enter your bet: ");
+
+
             int bet = int.Parse(Console.ReadLine());
             if (bet > money)
             {
                 Console.WriteLine("You don't have enough money for that son!!!");
                 continue;
             }
-
+            Console.WriteLine("---------------");
+            Console.Clear();
             List<string> deck = InitializeDeck();
             ShuffleDeck(deck);
 
@@ -57,7 +62,9 @@ class Blackjack
                     DisplayHand(playerHand);
                     if (CalculateHandValue(playerHand) > 21)
                     {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine("Bust!");
+                        Console.ForegroundColor = defaultcolor;
                         money -= bet;
                         break;
                     }
