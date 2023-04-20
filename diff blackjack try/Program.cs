@@ -16,15 +16,22 @@ class Blackjack
             Console.WriteLine();
             Console.Write("Enter your bet: ");
 
-
-            int bet = int.Parse(Console.ReadLine());
+            int bet = 0;
+            while (int.TryParse(Console.ReadLine(), out bet) == false)
+            {
+                Console.Write("You accidentally put a letter, or nothing, please enter your bet again: ");
+            }
+            
             if (bet > money)
             {
                 Console.WriteLine("You don't have enough money for that son!!!");
                 continue;
             }
+    
             Console.WriteLine("---------------");
             Console.Clear();
+            Console.WriteLine("Welcome to Blackjack! You have $" + money);
+            Console.Write("Enter your bet: ");
             List<string> deck = InitializeDeck();
             ShuffleDeck(deck);
 
@@ -53,7 +60,7 @@ class Blackjack
             bool playerStands = false;
             while (!playerStands)
             {
-                Console.Write("Do you want to hit, double down or stand? dd = double down: ");
+                Console.Write("Do you want to hit = h, double down = dd, or stand = s?: ");
                 string choice = Console.ReadLine().ToLower();
                 if (choice == "hit")
                 {
@@ -71,13 +78,41 @@ class Blackjack
                     //if 21 end
                     else if (CalculateHandValue(playerHand) == 21)
                     {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("21!");
+                        Console.ForegroundColor = defaultcolor;
+                        break;
+                    }
+                }
+                if (choice == "h")
+                {
+                    playerHand.Add(DealCard(deck));
+                    Console.WriteLine("Your cards:");
+                    DisplayHand(playerHand);
+                    if (CalculateHandValue(playerHand) > 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("Bust!");
+                        Console.ForegroundColor = defaultcolor;
+                        money -= bet;
+                        break;
+                    }
+                    //if 21 end
+                    else if (CalculateHandValue(playerHand) == 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("21!");
+                        Console.ForegroundColor = defaultcolor;
                         break;
                     }
                 }
                 else if (choice == "stand")
                 {
                     playerStands = true;
+                }
+                else if (choice == "s")
+                {
+                    playerStands= true;
                 }
                 else if (choice == "double down")
                 {
@@ -99,7 +134,9 @@ class Blackjack
                     DisplayHand(playerHand);
                     if (CalculateHandValue(playerHand) > 21)
                     {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine("Bust!");
+                        Console.ForegroundColor = defaultcolor;
                         money -= bet * 2;
                     }
                     else
@@ -125,22 +162,30 @@ class Blackjack
                 }
                 if (CalculateHandValue(dealerHand) > 21)
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Dealer busts! You win $" + bet);
+                    Console.ForegroundColor = defaultcolor;
                     money += bet;
                 }
                 else if (CalculateHandValue(dealerHand) < CalculateHandValue(playerHand))
                 {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("You win $" + bet);
+                    Console.ForegroundColor = defaultcolor;
                     money += bet;
                 }
                 else if (CalculateHandValue(dealerHand) > CalculateHandValue(playerHand))
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Dealer wins! You lose $" + bet);
+                    Console.ForegroundColor = defaultcolor;
                     money -= bet;
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                     Console.WriteLine("Push!");
+                    Console.ForegroundColor = defaultcolor;
                 }
             }
 
