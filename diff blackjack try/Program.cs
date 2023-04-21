@@ -31,7 +31,6 @@ class Blackjack
             Console.WriteLine("---------------");
             Console.Clear();
             Console.WriteLine("Welcome to Blackjack! You have $" + money);
-            Console.Write("Enter your bet: ");
             List<string> deck = InitializeDeck();
             ShuffleDeck(deck);
 
@@ -62,28 +61,6 @@ class Blackjack
             {
                 Console.Write("Do you want to hit = h, double down = dd, or stand = s?: ");
                 string choice = Console.ReadLine().ToLower();
-                if (choice == "hit")
-                {
-                    playerHand.Add(DealCard(deck));
-                    Console.WriteLine("Your cards:");
-                    DisplayHand(playerHand);
-                    if (CalculateHandValue(playerHand) > 21)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkRed;
-                        Console.WriteLine("Bust!");
-                        Console.ForegroundColor = defaultcolor;
-                        money -= bet;
-                        break;
-                    }
-                    //if 21 end
-                    else if (CalculateHandValue(playerHand) == 21)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("21!");
-                        Console.ForegroundColor = defaultcolor;
-                        break;
-                    }
-                }
                 if (choice == "h")
                 {
                     playerHand.Add(DealCard(deck));
@@ -105,6 +82,8 @@ class Blackjack
                         Console.ForegroundColor = defaultcolor;
                         break;
                     }
+            
+               
                 }
                 else if (choice == "stand")
                 {
@@ -114,11 +93,9 @@ class Blackjack
                 {
                     playerStands= true;
                 }
-                else if (choice == "double down")
-                {
-                }
                 else if (choice == "dd")
-                { 
+                {
+                
                     if (playerHand.Count > 2)
                     {
                         Console.WriteLine("You can only double down with your first two cards!");
@@ -138,6 +115,7 @@ class Blackjack
                         Console.WriteLine("Bust!");
                         Console.ForegroundColor = defaultcolor;
                         money -= bet * 2;
+                        break;
                     }
                     else
                     {
