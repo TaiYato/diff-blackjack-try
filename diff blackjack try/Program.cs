@@ -5,7 +5,7 @@ class Blackjack
 {
     static void Main(string[] args)
     {
-        int money = 1000;
+        uint money = 1000;
         ConsoleColor defaultcolor = ConsoleColor.Green;
         Console.ForegroundColor = defaultcolor;
         Console.WriteLine("Welcome to Blackjack! You have $" + money);
@@ -16,10 +16,10 @@ class Blackjack
             Console.WriteLine();
             Console.Write("Enter your bet: ");
 
-            int bet = 0;
-            while (int.TryParse(Console.ReadLine(), out bet) == false)
+            uint bet = 0;
+            while (uint.TryParse(Console.ReadLine(), out bet) == false)
             {
-                Console.Write("You accidentally put a letter, or nothing, please enter your bet again: ");
+                Console.Write("You accidentally put a letter, invalid number, negative number, or nothing, please enter your bet again: ");
             }
             
             if (bet > money)
@@ -27,11 +27,19 @@ class Blackjack
                 Console.WriteLine("You don't have enough money for that son!!!");
                 continue;
             }
+
+            if (bet == 0) 
+            {
+                Console.WriteLine("Can't do 0 bro :/");
+                continue;
+            }
     
+           
             Console.WriteLine("---------------");
-            Console.Clear();
+            Console.Clear();           
             Console.WriteLine("Welcome to Blackjack! You have $" + money);
-            Console.Write("Enter your bet: ");
+            Console.WriteLine($"Current bet: " + bet);
+
             List<string> deck = InitializeDeck();
             ShuffleDeck(deck);
 
@@ -53,7 +61,7 @@ class Blackjack
             if (CalculateHandValue(playerHand) == 21)
             {
                 Console.WriteLine("Blackjack!");
-                money += (int)(bet * 1.5);
+                money += (uint)(bet * 1.5);
                 continue;
             }
 
@@ -112,13 +120,60 @@ class Blackjack
                 }
                 else if (choice == "s")
                 {
-                    playerStands= true;
+                    playerStands = true;
+                }
+                else if (choice == "hit")
+                {
+                    playerHand.Add(DealCard(deck));
+                    Console.WriteLine("Your cards:");
+                    DisplayHand(playerHand);
+                    if (CalculateHandValue(playerHand) > 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("Bust!");
+                        Console.ForegroundColor = defaultcolor;
+                        money -= bet;
+                        break;
+                    }
+                    //if 21 end
+                    else if (CalculateHandValue(playerHand) == 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("21!");
+                        Console.ForegroundColor = defaultcolor;
+                        break;
+                    }
                 }
                 else if (choice == "double down")
                 {
+                    if (playerHand.Count > 2)
+                    {
+                        Console.WriteLine("You can only double down with your first two cards!");
+                        continue;
+                    }
+                    if (bet * 2 > money)
+                    {
+                        Console.WriteLine("You don't have enough money to double down!");
+                        continue;
+                    }
+                    playerHand.Add(DealCard(deck));
+                    Console.WriteLine("Your cards:");
+                    DisplayHand(playerHand);
+                    if (CalculateHandValue(playerHand) > 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine("Bust!");
+                        Console.ForegroundColor = defaultcolor;
+                        money -= bet * 2;
+                    }
+                    else
+                    {
+                        playerStands = true;
+                        bet *= 2;
+                    }
                 }
                 else if (choice == "dd")
-                { 
+                {
                     if (playerHand.Count > 2)
                     {
                         Console.WriteLine("You can only double down with your first two cards!");
